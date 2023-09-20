@@ -1,7 +1,7 @@
 const User = require("../Models/UserSchema");
 const constant = require("../Utils/Constant/constant");
 const bcrypt = require("bcrypt");
-const { loginBodySchema } = require("../Utils/Validation/BodySchema");
+const { loginBodySchema } = require("../Utils/validation/BodySchema");
 const { schemaErrorResponse } = require("../Utils/Error/schemaError");
 
 const adminUserSeed = async (req, res) => {

@@ -14,6 +14,12 @@ const loginBodySchema = Joi.object({
   password: passwordSchema,
 });
 
+const firebaseAccountBodySchema = Joi.object({
+  appName: Joi.string().required(),
+  packageName: Joi.string().required(),
+});
+
 module.exports = {
   loginBodySchema,
+  firebaseAccountBodySchema,
 };

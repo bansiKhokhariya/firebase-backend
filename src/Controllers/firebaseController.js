@@ -1,11 +1,8 @@
 var admin = require("firebase-admin");
 const axios = require("axios");
-var serviceAccount = require("../../serviceAccount.json");
-const { log } = require("firebase-functions/logger");
+const connectionFirebase = require("../Config/FirebaseConnection");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+connectionFirebase();
 
 async function getAccessToken() {
   try {
@@ -28,7 +25,7 @@ const setRemoteConfig = async (req, res) => {
     });
 
     const template = templateResponse.data;
-    
+
     // Assuming req.body contains an array of items
     Object.keys(req.body).forEach((key) => {
       template.parameters[key].defaultValue.value = req.body[key];

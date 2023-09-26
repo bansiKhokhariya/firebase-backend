@@ -57,6 +57,16 @@ const appConfigure = async (req, res) => {
   }
 };
 
+const getAppConfigure = async (req, res) => {
+  try {
+    const data = await FirebaseAccountSchema.find().select("appName packageName");
+    res.json(data)
+  } catch (err) {
+    handleErrorResponse(res.err)
+  }
+}
+
 module.exports = {
   appConfigure,
+  getAppConfigure
 };

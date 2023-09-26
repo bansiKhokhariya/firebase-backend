@@ -13,4 +13,7 @@ routes.post("/firebase/update", auth, firebaseController.setRemoteConfig);
 // firebase service account upload
 routes.post("/appConfigure", auth, serviceAccountController.appConfigure);
 
+// get application configure 
+routes.get("/getAppConfigure", auth, serviceAccountController.getAppConfigure);
+
 module.exports = routes;

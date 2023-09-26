@@ -13,8 +13,9 @@ const appConfigure = async (req, res) => {
     if (error) {
       return schemaErrorResponse({ res, error });
     }
-    const uploadedFile = req.files.jsonFile;
-    if (uploadedFile) {
+    if (req.files) {
+      const uploadedFile = req.files.jsonFile;
+
       if (uploadedFile.mimetype === "application/json") {
         const jsonData = JSON.parse(uploadedFile.data.toString("utf8"));
 

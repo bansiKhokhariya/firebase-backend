@@ -17,8 +17,19 @@ const appConfigure = async (req, res) => {
       const uploadedFile = req.files.jsonFile;
 
       if (uploadedFile.mimetype === "application/json") {
-        const jsonData = JSON.parse(uploadedFile.data.toString("utf8"));
 
+        // Check if a document with the same packageName already exists
+        const existingAccount = await FirebaseAccountSchema.findOne({ packageName: value.packageName });
+
+        if (existingAccount) {
+          return res.status(400).json({
+            requestBodyError: {
+              packageName: 'Package name must be unique.',
+            },
+          });
+        }
+
+        const jsonData = JSON.parse(uploadedFile.data.toString("utf8"));
         const accountData = {
           appName: value.appName,
           packageName: value.packageName,

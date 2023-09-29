@@ -55,6 +55,7 @@ async function getAccessToken(serviceAccountJsonObject, appName) {
   }
 }
 
+// update remote config function
 async function setRemoteConfig(req, res) {
   try {
     const serviceAccountJsonObject = await getServiceAccountObject(req.query.id);
@@ -64,7 +65,7 @@ async function setRemoteConfig(req, res) {
     await initializeFirebaseApp(serviceAccountJsonObject, appName);
 
     const accessToken = await getAccessToken(serviceAccountJsonObject, appName);
-    const url = `https://firebaseremoteconfig.googleapis.com/v1/projects/${serviceAccountJsonObject.project_id}/remoteConfig`;
+    const url = `https://firebaseremoteconfig.googleapis.com/v1/projects/${appName}/remoteConfig`;
 
     const templateResponse = await axios.get(url, {
       headers: {
@@ -96,6 +97,7 @@ async function setRemoteConfig(req, res) {
   }
 }
 
+// get remote config function
 async function getRemoteConfig(req, res) {
   try {
     const serviceAccountJsonObject = await getServiceAccountObject(req.query.id);
@@ -105,7 +107,7 @@ async function getRemoteConfig(req, res) {
     await initializeFirebaseApp(serviceAccountJsonObject, appName);
 
     const accessToken = await getAccessToken(serviceAccountJsonObject, appName);
-    const url = `https://firebaseremoteconfig.googleapis.com/v1/projects/${serviceAccountJsonObject.project_id}/remoteConfig`;
+    const url = `https://firebaseremoteconfig.googleapis.com/v1/projects/${appName}/remoteConfig`;
 
     const templateResponse = await axios.get(url, {
       headers: {
@@ -121,8 +123,111 @@ async function getRemoteConfig(req, res) {
   }
 }
 
+// delete remote config function
+async function deleteRemoteConfigParameter(req, res) {
+  try {
+    const serviceAccountJsonObject = await getServiceAccountObject(req.query.id);
+    const appName = serviceAccountJsonObject.project_id;
+
+    // Initialize or reinitialize Firebase with the new service account
+    await initializeFirebaseApp(serviceAccountJsonObject, appName);
+
+    const accessToken = await getAccessToken(serviceAccountJsonObject, appName);
+    const url = `https://firebaseremoteconfig.googleapis.com/v1/projects/${appName}/remoteConfig`;
+
+    const templateResponse = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const template = templateResponse.data;
+
+    // Get the parameter name to be deleted from the URL
+    const paramNameToDelete = req.query.paramName;
+
+    // Check if the parameter to be deleted exists in the template
+    if (template.parameters[paramNameToDelete]) {
+      delete template.parameters[paramNameToDelete];
+
+      const updateResponse = await axios.put(url, template, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "If-Match": templateResponse.headers.etag,
+          "Content-Type": "application/json; UTF8",
+        },
+      });
+
+      res.send(updateResponse.data);
+    } else {
+      res.status(404).json({ message: `Parameter '${paramNameToDelete}' not found.` });
+    }
+  } catch (error) {
+    res.send(error.message);
+    console.error("Error deleting Remote Config parameter:", error);
+  }
+}
+
+// Function to add or update Firebase Remote Config parameter
+async function addOrUpdateRemoteConfigParameters(req, res) {
+  try {
+    const dataToUpdate = req.body; // Get key-value pairs from the request body
+
+    if (Object.keys(dataToUpdate).length === 0) {
+      return res.json({ success: false, error: "No parameters provided" });
+    }
+
+    const serviceAccountJsonObject = await getServiceAccountObject(req.query.id);
+    const appName = serviceAccountJsonObject.project_id;
+
+    // Initialize or reinitialize Firebase with the new service account
+    await initializeFirebaseApp(serviceAccountJsonObject, appName);
+
+    const accessToken = await getAccessToken(serviceAccountJsonObject, appName);
+
+    const url = `https://firebaseremoteconfig.googleapis.com/v1/projects/${appName}/remoteConfig`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const remoteConfig = response.data;
+
+    // Loop through the provided key-value pairs and update the remote config
+    for (const key in dataToUpdate) {
+      if (remoteConfig.parameters[key]) {
+        remoteConfig.parameters[key].defaultValue.value = dataToUpdate[key];
+      } else {
+        remoteConfig.parameters[key] = {
+          defaultValue: {
+            value: dataToUpdate[key],
+          },
+        };
+      }
+    }
+
+    // Update the remote config
+    const updateResponse = await axios.put(url, remoteConfig, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "If-Match": response.headers.etag,
+        "Content-Type": "application/json; UTF8",
+      },
+    });
+
+    return res.json({ success: true, message: "Parameters added/updated successfully" });
+  } catch (error) {
+    console.error("Error adding/updating Remote Config parameters:", error);
+    return res.json({ success: false, error: "Failed to add/update Remote Config parameters" });
+  }
+}
+
 module.exports = {
   getRemoteConfig,
   setRemoteConfig,
+  deleteRemoteConfigParameter,
+  addOrUpdateRemoteConfigParameters
 };
 

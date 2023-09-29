@@ -16,4 +16,11 @@ routes.post("/appConfigure", auth, serviceAccountController.appConfigure);
 // get application configure 
 routes.get("/getAppConfigure", auth, serviceAccountController.getAppConfigure);
 
+// delete config parameter 
+routes.delete('/firebase/delete-parameter', firebaseController.deleteRemoteConfigParameter);
+
+// add config parameter 
+routes.post("/firebase/add",  firebaseController.addOrUpdateRemoteConfigParameters);
+
+
 module.exports = routes;

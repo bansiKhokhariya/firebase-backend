@@ -1,7 +1,8 @@
 let constants = {
   SUCCESS_MESSAGE: {
     LOGIN: "The user has successfully logged in.",
-    DATA_SAVE :"The data has been saved successfully"
+    DATA_SAVE :"The data has been saved successfully",
+    DATA_DELETE :"The data has been deleted successfully"
   },
   ERROR_MESSAGE: {
     EMAIL_NOT_EXISTS_MESSAGE: "An email address with this name does not exist.",

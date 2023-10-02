@@ -10,17 +10,17 @@ routes.get("/firebase/get", auth, firebaseController.getRemoteConfig);
 // firebase remote config update parameter route
 routes.post("/firebase/update", auth, firebaseController.setRemoteConfig);
 
-// firebase service account upload
-routes.post("/appConfigure", auth, serviceAccountController.appConfigure);
-
-// get application configure 
-routes.get("/getAppConfigure", auth, serviceAccountController.getAppConfigure);
-
 // delete config parameter 
 routes.delete('/firebase/delete-parameter', firebaseController.deleteRemoteConfigParameter);
 
 // add config parameter 
-routes.post("/firebase/add",  firebaseController.addOrUpdateRemoteConfigParameters);
+routes.post("/firebase/add", firebaseController.addOrUpdateRemoteConfigParameters);
 
+// firebase service account upload
+routes.post("/appConfigure", auth, serviceAccountController.appConfigure);
+routes.delete("/deleteApplication", auth, serviceAccountController.deleteApplication);
+
+// get application configure 
+routes.get("/getAppConfigure", auth, serviceAccountController.getAppConfigure);
 
 module.exports = routes;

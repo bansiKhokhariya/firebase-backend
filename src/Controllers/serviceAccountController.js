@@ -73,11 +73,21 @@ const getAppConfigure = async (req, res) => {
     const data = await FirebaseAccountSchema.find().select("appName packageName");
     res.json(data)
   } catch (err) {
-    handleErrorResponse(res.err)
+    handleErrorResponse(res, err)
+  }
+}
+
+const deleteApplication = async (req, res) => {
+  try {
+    await FirebaseAccountSchema.findByIdAndDelete({ _id: req.query.id });
+    res.status(200).json({ message: constant.SUCCESS_MESSAGE.DATA_DELETE });
+  } catch (err) {
+    handleErrorResponse(res, err)
   }
 }
 
 module.exports = {
   appConfigure,
-  getAppConfigure
+  getAppConfigure,
+  deleteApplication
 };

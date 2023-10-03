@@ -1,8 +1,8 @@
 const DynamicLink = require("../Models/DynamicLinkSchema");
 
 const constant = require("../Utils/Constant/constant");
-const { schemaErrorResponse } = require("../Utils/error/schemaError");
-const handleErrorResponse = require("../Utils/error/handleErrorResponse");
+const { schemaErrorResponse } = require("../Utils/Error/schemaError");
+const handleErrorResponse = require("../Utils/Error/handleErrorResponse");
 const { dynamicLinkBodySchema } = require("../Utils/validation/BodySchema");
 
 const getLink = async (req, res) => {

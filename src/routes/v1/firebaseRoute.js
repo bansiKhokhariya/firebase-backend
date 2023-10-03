@@ -23,4 +23,7 @@ routes.delete("/deleteApplication", auth, serviceAccountController.deleteApplica
 // get application configure 
 routes.get("/getAppConfigure", auth, serviceAccountController.getAppConfigure);
 
+// get android application list 
+routes.get("/getAndroidApps",  firebaseController.getAndroidApps);
+
 module.exports = routes;

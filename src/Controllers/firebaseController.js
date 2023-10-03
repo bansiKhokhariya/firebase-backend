@@ -224,10 +224,33 @@ async function addOrUpdateRemoteConfigParameters(req, res) {
   }
 }
 
+async function getAndroidApps(req, res) {
+  try {
+    const serviceAccountJsonObject = await getServiceAccountObject(req.query.id);
+    const appName = serviceAccountJsonObject.project_id; // Define an app name
+    // Initialize or reinitialize Firebase with the new service account
+    await initializeFirebaseApp(serviceAccountJsonObject, appName);
+    const accessToken = await getAccessToken(serviceAccountJsonObject, appName);
+    const response = await axios.get(
+      `https://firebase.googleapis.com/v1beta1/projects/${appName}/androidApps`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    res.send(response.data)
+  } catch (error) {
+    console.error('Error fetching Android apps:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   getRemoteConfig,
   setRemoteConfig,
   deleteRemoteConfigParameter,
-  addOrUpdateRemoteConfigParameters
+  addOrUpdateRemoteConfigParameters,
+  getAndroidApps
 };
 

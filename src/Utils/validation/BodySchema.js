@@ -19,7 +19,14 @@ const firebaseAccountBodySchema = Joi.object({
   packageName: Joi.string().required(),
 });
 
+const dynamicLinkBodySchema = Joi.object({
+  name: Joi.string().required(),
+  link: Joi.string().required().uri(),
+  image: Joi.string().uri(),
+})
+
 module.exports = {
   loginBodySchema,
   firebaseAccountBodySchema,
+  dynamicLinkBodySchema
 };

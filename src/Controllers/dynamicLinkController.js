@@ -1,5 +1,4 @@
 const DynamicLink = require("../Models/DynamicLinkSchema");
-
 const constant = require("../Utils/Constant/constant");
 const { schemaErrorResponse } = require("../Utils/Error/schemaError");
 const handleErrorResponse = require("../Utils/Error/handleErrorResponse");

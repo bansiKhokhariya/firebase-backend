@@ -5,7 +5,7 @@ const auth = require("../../Middleware/checkAuth");
 
 routes
     .route("/dynamicLink")
-    .get(auth, dynamicLinkController.getLink)
+    .get(dynamicLinkController.getLink)
     .post(auth, dynamicLinkController.createLink)
     .put(auth, dynamicLinkController.updateLink)
     .delete(auth, dynamicLinkController.deleteLink);

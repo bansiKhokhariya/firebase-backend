@@ -6,12 +6,12 @@ const { schemaErrorResponse } = require("../Utils/Error/schemaError");
 
 const adminUserSeed = async (req, res) => {
   //Hash password //
-  var hashedPassword = await bcrypt.hash("hk@1211", 10);
+  var hashedPassword = await bcrypt.hash("Hkapps@123", 10);
 
   // add user //
   const user = new User({
-    name: "Super Admin",
-    email: "superadmin@gmail.com",
+    name: "HK APPS",
+    email: "info@hkapps.co",
     password: hashedPassword,
   });
   await user.save();
